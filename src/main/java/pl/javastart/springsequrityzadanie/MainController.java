@@ -16,6 +16,9 @@ public class MainController {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private UserRoleRepository userRoleRepository;
+
     @GetMapping("/login")
     public String showLoginForm(){
         return "login";
@@ -27,17 +30,18 @@ public class MainController {
     }
 
     @GetMapping("/register")
-    public String showRegForm(Model model, User user){
+    public String showRegForm(Model model){
         model.addAttribute("user", new User());
+        model.addAttribute("userRole", new UserRole());
         return "register";
     }
 
 
     @PostMapping("/register")
-    @ResponseBody
-    public String addUser(User user) {
+    public String addUser(User user, UserRole userRole) {
         userRepository.save(user);
-        return "Dodano użytkownika do bazy danych!";
+        userRoleRepository.save(userRole);
+        return "redirect:/";
     }
 
     @GetMapping("/")
@@ -45,11 +49,25 @@ public class MainController {
         return "mainPage";
     }
 
-    @GetMapping("/edit/{id}")
-    public String editUserForm(@PathVariable Long id, Model model) {
-        User user = userRepository.findOne(id);
+    @GetMapping("/edit")
+    public String editUserForm(Model model, Principal principal) {
+        User user = userRepository.findUserByUsername(principal.getName());
         model.addAttribute("user", user);
         return "edit";
+    }
+
+    @PostMapping("/edit")
+    public String saveEditUser(User user, Principal principal) {
+        User newUser = userRepository.findUserByUsername(principal.getName());
+        newUser.setUsername(user.getUsername());
+        newUser.setPassword(user.getPassword());
+        newUser.setEnabled(user.isEnabled());
+        newUser.setFirstName(user.getFirstName());
+        newUser.setLastName(user.getLastName());
+        newUser.setTelNumber(user.getTelNumber());
+
+        userRepository.save(newUser);
+        return "redirect:/menu";
     }
 
     @GetMapping("/username")

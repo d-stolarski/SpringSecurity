@@ -1,15 +1,23 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
     <meta charset="UTF-8"/>
     <title>Edycja</title>
+    <style>
+        body {
+            background-color: linen;
+            margin-left: 40px;
+            margin-top: 40px;
+        }
+    </style>
 </head>
 <body>
 <h1>Zmiana danych</h1>
 
-<form action="#" th:action="'/edit' + ${user.id}" th:object="${user}" method="post">
+<form action="#" th:action="@{/edit}" th:object="${user}" method="post">
     <input type="hidden" th:field="*{id}"/>
-    Nazwa użytkownika: <br/><input type="text" th:field="*{username}" /> <br/><br/>
+    <input type="hidden" th:field="*{username}"/>
     Hasło: <br/><input type="password" th:field="*{password}" /> <br/><br/>
     Imię: <br/><input type="text" th:field="*{firstName}" /> <br/><br/>
     Nazwisko: <br/><input type="text" th:field="*{lastName}" /><br/><br/>

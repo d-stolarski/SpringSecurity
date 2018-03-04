@@ -12,11 +12,22 @@ public class User {
     private Long id;
     private String username;
     private String password;
+    private boolean enabled;
     private String firstName;
     private String lastName;
     private String telNumber;
 
     public User() {
+        this.enabled = true;
+    }
+
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
     public Long getId() {
