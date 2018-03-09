@@ -1,6 +1,8 @@
 package pl.javastart.springsequrityzadanie;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,6 +41,9 @@ public class MainController {
 
     @PostMapping("/register")
     public String addUser(User user, UserRole userRole) {
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String hashedPassword = passwordEncoder.encode(user.getPassword());
+        user.setPassword(hashedPassword);
         userRepository.save(user);
         userRoleRepository.save(userRole);
         return "redirect:/";
@@ -61,6 +66,9 @@ public class MainController {
         User newUser = userRepository.findUserByUsername(principal.getName());
         newUser.setUsername(user.getUsername());
         newUser.setPassword(user.getPassword());
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String hashedPassword = passwordEncoder.encode(newUser.getPassword());
+        newUser.setPassword(hashedPassword);
         newUser.setEnabled(user.isEnabled());
         newUser.setFirstName(user.getFirstName());
         newUser.setLastName(user.getLastName());
